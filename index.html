@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RefSoundBoard</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; padding: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        button { background-color: #ff5e3a; color: white; border: none; padding: 30px; font-size: 18px; border-radius: 15px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        button:active { background-color: #e04e2a; transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <h1>🔊 Ma Soundboard</h1>
+    
+    <div class="grid">
+        <button onclick="playSound('Bonjour.mp3')">Bruit 1</button>
+        <button onclick="playSound('Bruuuuh.mp3')">Bruit 2</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
