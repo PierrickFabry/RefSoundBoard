@@ -1,4 +1,4 @@
-const LAUNCH_TIME = '1780916353';
+const LAUNCH_TIME = '1780918045';
 importScripts('sounds-config.js');
 
 const CACHE_NAME = 'soundboard-' + LAUNCH_TIME;
