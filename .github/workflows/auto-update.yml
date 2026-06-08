@@ -1,0 +1,38 @@
+name: Auto Update Soundboard
+
+on:
+  push:
+    paths:
+      - 'Sons/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Scanner le dossier et mettre à jour la configuration
+        run: |
+          TIMESTAMP=$(date +%s)
+          sed -i "s/const LAUNCH_TIME = .*/const LAUNCH_TIME = '$TIMESTAMP';/g" sw.js
+          echo "self.SOUNDS_LIST = [" > sounds-config.js
+          for f in Sons/*.mp3; do
+            if [ -f "$f" ]; then
+              name=$(basename "$f")
+              echo "  '$name'," >> sounds-config.js
+            fi
+          done
+          echo "];" >> sounds-config.js
+
+      - name: Sauvegarder les modifications sur GitHub
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add sounds-config.js sw.js
+          git commit -m "🤖 Robot : Mise à jour des sons et du cache [skip ci]" || exit 0
+          git push
