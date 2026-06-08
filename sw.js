@@ -9,11 +9,11 @@ const assets = [
     './app.js',
     './sounds-config.js',
     './manifest.json',
-    './icones/icone-512.png'
+    './Icones/icone-512.png'
 ];
 
 // On fusionne les fichiers de base avec la liste des sons générée par le robot
-const allAssets = assets.concat(SOUNDS_LIST.map(son => './sons/' + son));
+const allAssets = assets.concat(SOUNDS_LIST.map(son => './Sons/' + son));
 
 self.addEventListener('install', event => {
     event.waitUntil(
