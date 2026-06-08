@@ -6,7 +6,7 @@ self.SOUNDS_LIST = [
   'Bonjour.mp3',
   'Bonne_nuit.mp3',
   'Bruuuuh.mp3',
-  'C_est_chaussette_semaine.mp3',
+  'C'est_chaussette_semaine.mp3',
   'C_est_d_la_merde.mp3',
   'C_est_pas_faux.mp3',
   'C_est_pas_possible.mp3',
