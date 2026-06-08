@@ -1,1 +1,1 @@
-self.SOUNDS_LIST = 
+self.SOUNDS_LIST = ;
