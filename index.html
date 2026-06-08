@@ -3,21 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RefSoundBoard</title>
-    <link rel="icon" type="image/png" href="Icones/icone-512.png">
+    <title>Ma Soundboard</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="Icones/icone-512.png">
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; padding: 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
-        button { background-color: #ff5e3a; color: white; border: none; padding: 30px; font-size: 18px; border-radius: 15px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        button:active { background-color: #e04e2a; transform: scale(0.95); }
+        
+        /* Barre de recherche */
+        #search-bar { width: 100%; max-width: 400px; padding: 15px; font-size: 16px; border-radius: 25px; border: none; margin-bottom: 20px; text-align: center; outline: none; }
+        
+        /* Grille principale */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        
+        /* Conteneur d'un son (Bouton play + Étoile) */
+        .sound-card { display: flex; gap: 5px; }
+        
+        /* Bouton Play */
+        .play-btn { background-color: #ff5e3a; color: white; border: none; padding: 20px 10px; font-size: 16px; border-radius: 10px; cursor: pointer; flex-grow: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.3); word-wrap: break-word; }
+        .play-btn:active { background-color: #e04e2a; transform: scale(0.95); }
+        
+        /* Bouton Favori */
+        .fav-btn { background-color: #444; color: #888; border: none; width: 45px; font-size: 22px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .fav-btn.active { color: #ffcc00; /* Étoile dorée */ }
     </style>
 </head>
 <body>
 
     <h1>🔊 Ma Soundboard</h1>
     
-    <div class="grid" id="soundboard-grid"></div>
+    <input type="text" id="search-bar" placeholder="🔍 Rechercher un son..." />
+    
+    <div class="grid" id="soundboard-grid">
+        </div>
 
     <script src="sounds-config.js"></script>
     <script src="app.js"></script>
