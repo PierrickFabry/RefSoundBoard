@@ -3,10 +3,11 @@ name: Auto Update Soundboard
 on:
   push:
     paths:
-      - 'Sons/**' # Le robot s'active uniquement si tu touches au dossier sons
+      - 'Sons/**'
+  workflow_dispatch:
 
 permissions:
-  contents: write # Permet au robot de modifier tes fichiers de code
+  contents: write
 
 jobs:
   build:
@@ -15,24 +16,20 @@ jobs:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      - name: Scanner le dossier et mettre à jour la configuration
+      - name: Scanner le dossier et sécuriser les noms
         run: |
           TIMESTAMP=$(date +%s)
           sed -i "s/const LAUNCH_TIME = .*/const LAUNCH_TIME = '$TIMESTAMP';/g" sw.js
           
-          echo "self.SOUNDS_LIST = [" > sounds-config.js
-          # La commande find va chercher tous les fichiers .mp3, même dans les sous-dossiers
-          find sons -type f -name "*.mp3" | while read -r f; do
-            # On retire le préfixe "sons/" pour ne garder que "Dossier/Fichier.mp3"
-            rel_path="${f#sons/}"
-            echo "  \"$rel_path\"," >> sounds-config.js
-          done
-          echo "];" >> sounds-config.js
+          # On utilise "jq" pour formater la liste en tableau Javascript parfait (gère tous les caractères)
+          echo -n "self.SOUNDS_LIST = " > sounds-config.js
+          cd sons && find . -type f -name "*.mp3" | sed 's/^\.\///' | jq -R . | jq -s . >> ../sounds-config.js
+          echo ";" >> ../sounds-config.js
 
       - name: Sauvegarder les modifications sur GitHub
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add sounds-config.js sw.js
-          git commit -m "🤖 Robot : Mise à jour des sons et du cache [skip ci]" || exit 0
+          git commit -m "🤖 Robot : Correction ultime des apostrophes [skip ci]" || exit 0
           git push
