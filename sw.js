@@ -1,4 +1,4 @@
-const LAUNCH_TIME = '1780918045';
+const LAUNCH_TIME = 'initial'; 
 importScripts('sounds-config.js');
 
 const CACHE_NAME = 'soundboard-' + LAUNCH_TIME;
@@ -13,7 +13,7 @@ const assets = [
 ];
 
 // On fusionne les fichiers de base avec la liste des sons générée par le robot
-const allAssets = assets.concat(SOUNDS_LIST.map(son => './Sons/' + son));
+const allAssets = assets.concat(SOUNDS_LIST.map(son => encodeURI('./Sons/' + son)));
 
 self.addEventListener('install', event => {
     event.waitUntil(

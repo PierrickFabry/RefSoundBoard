@@ -54,14 +54,15 @@ function renderButtons() {
 
 // Fonction pour JOUER et STOPPER les sons
 function playSound(nomDuFichier) {
-    // Si un son est déjà en train d'être joué, on le coupe
     if (currentAudio) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
     }
     
-    // On lance le nouveau son
-    currentAudio = new Audio('Sons/' + nomDuFichier);
+    // On sécurise le nom du fichier pour le web
+    const cheminSecurise = encodeURI('Sons/' + nomDuFichier);
+    currentAudio = new Audio(cheminSecurise);
+    
     currentAudio.play();
 }
 
