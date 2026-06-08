@@ -3,6 +3,7 @@ name: Auto Update Soundboard
 on:
   push:
     paths:
+      - 'sons/**'
       - 'Sons/**'
   workflow_dispatch:
 
@@ -16,18 +17,37 @@ jobs:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      - name: Scanner le dossier et sécuriser les noms
+      - name: Générer la liste avec Python (100% fiable)
         run: |
+          # 1. Mise à jour du cache hors-ligne
           TIMESTAMP=$(date +%s)
           sed -i "s/const LAUNCH_TIME = .*/const LAUNCH_TIME = '$TIMESTAMP';/g" sw.js
           
-          # Génération de la liste en une seule commande sécurisée
-          echo "self.SOUNDS_LIST = $(cd sons && find . -type f -name '*.mp3' | sed 's/^\.\///' | jq -R . | jq -s .);" > sounds-config.js
+          # 2. Script Python pour scanner et créer le fichier parfaitement
+          python3 -c "
+          import os, json
+          
+          sounds = []
+          # On cherche le dossier (en gérant la majuscule au cas où)
+          folder = 'sons' if os.path.exists('sons') else ('Sons' if os.path.exists('Sons') else None)
+          
+          if folder:
+              for root, dirs, files in os.walk(folder):
+                  for f in files:
+                      if f.lower().endswith('.mp3'):
+                          # Construit le chemin et gère les slashs
+                          path = os.path.relpath(os.path.join(root, f), folder).replace('\\\\', '/')
+                          sounds.append(path)
+                          
+          # On écrit le résultat proprement dans le fichier
+          with open('sounds-config.js', 'w', encoding='utf-8') as out:
+              out.write('self.SOUNDS_LIST = ' + json.dumps(sounds, ensure_ascii=False) + ';\n')
+          "
 
       - name: Sauvegarder les modifications sur GitHub
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add sounds-config.js sw.js
-          git commit -m "🤖 Robot : Correction ultime des apostrophes [skip ci]" || exit 0
+          git commit -m "🤖 Robot : Génération fiable avec Python [skip ci]" || exit 0
           git push
