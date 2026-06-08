@@ -9,9 +9,10 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; padding: 20px; }
         
-        /* Barre de recherche */
-        #search-bar { width: 100%; max-width: 400px; padding: 15px; font-size: 16px; border-radius: 25px; border: none; margin-bottom: 20px; text-align: center; outline: none; }
-        
+        /* Barre de recherche et Filtre */
+        .filters { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto 20px auto; }
+        #search-bar, #category-filter { padding: 15px; font-size: 16px; border-radius: 25px; border: none; text-align: center; outline: none; background-color: #333; color: white; }
+
         /* Grille principale */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         
@@ -31,7 +32,12 @@
 
     <h1>🔊 Ma Soundboard</h1>
     
-    <input type="text" id="search-bar" placeholder="🔍 Rechercher un son..." />
+    <div class="filters">
+        <input type="text" id="search-bar" placeholder="🔍 Rechercher un son..." />
+        <select id="category-filter">
+            <option value="all">Toutes les catégories</option>
+            </select>
+    </div>
     
     <div class="grid" id="soundboard-grid">
         </div>
