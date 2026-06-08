@@ -21,10 +21,8 @@ jobs:
           TIMESTAMP=$(date +%s)
           sed -i "s/const LAUNCH_TIME = .*/const LAUNCH_TIME = '$TIMESTAMP';/g" sw.js
           
-          # On utilise "jq" pour formater la liste en tableau Javascript parfait (gère tous les caractères)
-          echo -n "self.SOUNDS_LIST = " > sounds-config.js
-          cd sons && find . -type f -name "*.mp3" | sed 's/^\.\///' | jq -R . | jq -s . >> ../sounds-config.js
-          echo ";" >> ../sounds-config.js
+          # Génération de la liste en une seule commande sécurisée
+          echo "self.SOUNDS_LIST = $(cd sons && find . -type f -name '*.mp3' | sed 's/^\.\///' | jq -R . | jq -s .);" > sounds-config.js
 
       - name: Sauvegarder les modifications sur GitHub
         run: |
