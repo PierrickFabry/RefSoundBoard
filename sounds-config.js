@@ -47,7 +47,7 @@ self.SOUNDS_LIST = [
   'Requiem.mp3',
   'SNCF.mp3',
   'Saxo sex.mp3',
-  'T'es mauvais.mp3',
+  'T es mauvais.mp3',
   'Tatakae !.mp3',
   'Tin Tin Tiiiiiin.mp3',
   'Tout de suite.mp3',
