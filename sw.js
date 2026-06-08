@@ -1,30 +1,45 @@
-const CACHE_NAME = 'soundboard-v1';
+const LAUNCH_TIME = 'initial'; 
+importScripts('sounds-config.js');
 
-// Liste de tous les fichiers à sauvegarder pour le hors-ligne
+const CACHE_NAME = 'soundboard-' + LAUNCH_TIME;
+
 const assets = [
     './',
     './index.html',
     './app.js',
+    './sounds-config.js',
     './manifest.json',
-    './sons/Bonjour.mp3',
-    './sons/Bruuuuh.mp3',
     './icones/icone-512.png'
 ];
 
-// Installation : on met tout en cache
+// On fusionne les fichiers de base avec la liste des sons générée par le robot
+const allAssets = assets.concat(SOUNDS_LIST.map(son => './sons/' + son));
+
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(assets);
+            return cache.addAll(allAssets);
         })
     );
 });
 
-// Lecture : on va chercher dans le cache en priorité
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request);
+        })
+    );
+});
+
+// Nettoyage automatique des anciens sons pour ne pas saturer le stockage
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(keys => {
+            return Promise.all(
+                keys.map(key => {
+                    if (key !== CACHE_NAME) return caches.delete(key);
+                })
+            );
         })
     );
 });
