@@ -3,11 +3,10 @@ name: Auto Update Soundboard
 on:
   push:
     paths:
-      - 'Sons/**'
-  workflow_dispatch:
+      - 'Sons/**' # Le robot s'active uniquement si tu touches au dossier sons
 
 permissions:
-  contents: write
+  contents: write # Permet au robot de modifier tes fichiers de code
 
 jobs:
   build:
@@ -20,12 +19,13 @@ jobs:
         run: |
           TIMESTAMP=$(date +%s)
           sed -i "s/const LAUNCH_TIME = .*/const LAUNCH_TIME = '$TIMESTAMP';/g" sw.js
+          
           echo "self.SOUNDS_LIST = [" > sounds-config.js
-          for f in Sons/*.mp3; do
-            if [ -f "$f" ]; then
-              name=$(basename "$f")
-              echo "  '$name'," >> sounds-config.js
-            fi
+          # La commande find va chercher tous les fichiers .mp3, même dans les sous-dossiers
+          find sons -type f -name "*.mp3" | while read -r f; do
+            # On retire le préfixe "sons/" pour ne garder que "Dossier/Fichier.mp3"
+            rel_path="${f#sons/}"
+            echo "  \"$rel_path\"," >> sounds-config.js
           done
           echo "];" >> sounds-config.js
 
