@@ -12,7 +12,7 @@ SOUNDS_LIST.forEach(fichier => {
 });
 
 function playSound(nomDuFichier) {
-    const audio = new Audio('sons/' + nomDuFichier);
+    const audio = new Audio('Sons/' + nomDuFichier);
     audio.play();
 }
 
