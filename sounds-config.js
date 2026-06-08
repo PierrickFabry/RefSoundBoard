@@ -41,7 +41,7 @@ self.SOUNDS_LIST = [
   'Motus - boule noir.mp3',
   'Non on veut pas.mp3',
   'On en a gros.mp3',
-  'On s'en bas les couilles.mp3',
+  'On s en bas les couilles.mp3',
   'Ouvre.mp3',
   'Pas le choix.mp3',
   'Requiem.mp3',
