@@ -16,7 +16,7 @@ const categoryEmojis = {
     'Films': '🎬',
     'Bruitages': '💥',
     'Musique': '🎵',
-    'Jeux': '🎮',
+    'Kaamelott': '🏰​',
     'Divers': '📁'
 };
 
@@ -57,8 +57,16 @@ function renderButtons() {
         const parts = chemin.split('/');
         const categorie = parts.length > 1 ? parts[0] : 'Divers';
         const nomFichier = parts[parts.length - 1];
+        const isFav = favoris.includes(chemin);
 
-        if (currentCategory !== 'all' && currentCategory !== categorie) return;
+        // --- LA MAGIE DU FILTRE FAVORIS ---
+        if (currentCategory === 'favorites') {
+            // Si on a choisi le filtre "Favoris", on ignore les sons sans étoile
+            if (!isFav) return; 
+        } else if (currentCategory !== 'all' && currentCategory !== categorie) {
+            // Sinon, c'est un filtre de catégorie classique
+            return; 
+        }
 
         let nomNettoye = nomFichier.replace('.mp3', '').replace(/_/g, ' ').replace(/-/g, ' ');
         nomNettoye = nomNettoye.charAt(0).toUpperCase() + nomNettoye.slice(1);
@@ -69,13 +77,11 @@ function renderButtons() {
 
         const playBtn = document.createElement('button');
         playBtn.className = 'play-btn';
-        // On insère dynamiquement l'emoji défini dans le dictionnaire
         playBtn.innerHTML = `${nomNettoye}<br><span style="font-size: 11px; opacity: 0.7;">${getEmoji(categorie)} ${categorie}</span>`;
         playBtn.addEventListener('click', () => playSound(chemin));
 
         const favBtn = document.createElement('button');
         favBtn.className = 'fav-btn';
-        const isFav = favoris.includes(chemin);
         favBtn.textContent = isFav ? '★' : '☆';
         if (isFav) favBtn.classList.add('active');
         
