@@ -17,6 +17,7 @@ const categoryEmojis = {
     'Bruitages': '💥',
     'Musique': '🎵',
     'Kaamelott': '🏰​',
+    'Kronk' : '💪​',
     'Divers': '📁'
 };
 
