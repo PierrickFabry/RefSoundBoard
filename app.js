@@ -1,27 +1,44 @@
 const grid = document.getElementById('soundboard-grid');
 const searchBar = document.getElementById('search-bar');
 const categoryFilter = document.getElementById('category-filter');
+const randomBtn = document.getElementById('random-btn');
+const volumeSlider = document.getElementById('volume-slider');
 
 let currentAudio = null;
 let favoris = JSON.parse(localStorage.getItem('mesFavoris')) || [];
 let currentCategory = 'all';
+let currentVolume = 1.0; // Le volume par défaut (à 100%)
 
-// 1. EXTRACTION DES CATÉGORIES
-// On regarde le nom des dossiers pour créer la liste des catégories
+// 1. DICTIONNAIRE D'EMOJIS PAR DOSSIER
+// N'hésite pas à modifier ces noms pour qu'ils correspondent exactement aux dossiers de ton GitHub
+const categoryEmojis = {
+    'Memes': '🤡',
+    'Films': '🎬',
+    'Bruitages': '💥',
+    'Musique': '🎵',
+    'Jeux': '🎮',
+    'Divers': '📁'
+};
+
+// Fonction pour récupérer l'emoji (met '📁' par défaut si le dossier n'est pas dans le dictionnaire)
+function getEmoji(category) {
+    return categoryEmojis[category] || '📁';
+}
+
+// 2. EXTRACTION DES CATÉGORIES
 const categoriesUniques = [...new Set(SOUNDS_LIST.map(chemin => {
     const parts = chemin.split('/');
     return parts.length > 1 ? parts[0] : 'Divers';
 }))];
 
-// On remplit le menu déroulant avec les catégories trouvées
 categoriesUniques.sort().forEach(cat => {
     const option = document.createElement('option');
     option.value = cat;
-    option.textContent = '📂 ' + cat;
+    option.textContent = getEmoji(cat) + ' ' + cat;
     categoryFilter.appendChild(option);
 });
 
-// 2. FONCTION POUR AFFICHER LES BOUTONS
+// 3. FONCTION POUR AFFICHER LES BOUTONS
 function renderButtons() {
     grid.innerHTML = '';
     
@@ -31,7 +48,6 @@ function renderButtons() {
         if (aFav && !bFav) return -1;
         if (!aFav && bFav) return 1;
         
-        // Extraction du nom du fichier pour le tri alphabétique
         const nomA = a.split('/').pop();
         const nomB = b.split('/').pop();
         return nomA.localeCompare(nomB);
@@ -42,7 +58,6 @@ function renderButtons() {
         const categorie = parts.length > 1 ? parts[0] : 'Divers';
         const nomFichier = parts[parts.length - 1];
 
-        // Si on a sélectionné une catégorie spécifique et que ce n'est pas la bonne, on passe au son suivant
         if (currentCategory !== 'all' && currentCategory !== categorie) return;
 
         let nomNettoye = nomFichier.replace('.mp3', '').replace(/_/g, ' ').replace(/-/g, ' ');
@@ -54,8 +69,8 @@ function renderButtons() {
 
         const playBtn = document.createElement('button');
         playBtn.className = 'play-btn';
-        // On affiche le nom et on ajoute la catégorie en tout petit en dessous
-        playBtn.innerHTML = `${nomNettoye}<br><span style="font-size: 11px; opacity: 0.7;">${categorie}</span>`;
+        // On insère dynamiquement l'emoji défini dans le dictionnaire
+        playBtn.innerHTML = `${nomNettoye}<br><span style="font-size: 11px; opacity: 0.7;">${getEmoji(categorie)} ${categorie}</span>`;
         playBtn.addEventListener('click', () => playSound(chemin));
 
         const favBtn = document.createElement('button');
@@ -72,6 +87,7 @@ function renderButtons() {
     });
 }
 
+// 4. JOUER LE SON (AVEC LE VOLUME)
 function playSound(cheminDuFichier) {
     if (currentAudio) {
         currentAudio.pause();
@@ -79,6 +95,10 @@ function playSound(cheminDuFichier) {
     }
     const cheminSecurise = encodeURI('Sons/' + cheminDuFichier);
     currentAudio = new Audio(cheminSecurise);
+    
+    // On applique le volume choisi par la jauge
+    currentAudio.volume = currentVolume; 
+    
     currentAudio.play();
 }
 
@@ -93,7 +113,6 @@ function toggleFavori(cheminDuFichier) {
     filtrerRecherche();
 }
 
-// 3. SYSTÈME DE RECHERCHE
 function filtrerRecherche() {
     const searchTerm = searchBar.value.toLowerCase();
     const cards = document.querySelectorAll('.sound-card');
@@ -107,13 +126,31 @@ function filtrerRecherche() {
     });
 }
 
-// 4. ÉCOUTEURS D'ÉVÉNEMENTS
+// 5. NOUVEAUX ÉCOUTEURS D'ÉVÉNEMENTS
 searchBar.addEventListener('input', filtrerRecherche);
 
 categoryFilter.addEventListener('change', (e) => {
     currentCategory = e.target.value;
     renderButtons();
-    filtrerRecherche(); // On relance la recherche textuelle au cas où il y avait déjà du texte
+    filtrerRecherche();
+});
+
+// Écouteur pour la jauge de volume
+volumeSlider.addEventListener('input', (e) => {
+    currentVolume = e.target.value;
+    // Si un son est déjà en train de jouer, on modifie son volume en direct
+    if (currentAudio) {
+        currentAudio.volume = currentVolume; 
+    }
+});
+
+// Écouteur pour le bouton Roulette Russe
+randomBtn.addEventListener('click', () => {
+    if (SOUNDS_LIST.length === 0) return;
+    // On tire un nombre au hasard entre 0 et la taille de la liste
+    const randomIndex = Math.floor(Math.random() * SOUNDS_LIST.length);
+    const randomSound = SOUNDS_LIST[randomIndex];
+    playSound(randomSound);
 });
 
 // Démarrage
