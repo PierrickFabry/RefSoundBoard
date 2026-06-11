@@ -3,70 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La planche à sons</title>
+    <title>Ma Soundboard</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="Icones/icone-512.png">
+    <link rel="icon" type="image/png" href="icones/icone-512.png">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; padding: 20px; margin: 0;}
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; margin: 0; padding-bottom: 20px;}
         
-        h1 { margin-bottom: 15px; }
+        h1 { margin: 15px 0 5px 0; font-size: 24px; }
 
-        /* Conteneur des contrôles (Volume, Aléatoire, Recherche) */
-        .controls-container { max-width: 400px; margin: 0 auto 20px auto; display: flex; flex-direction: column; gap: 15px; }
+        /* Menu collant avec effet de verre (blur) */
+        .controls-container { 
+            position: sticky; 
+            top: 0; 
+            background-color: rgba(34, 34, 34, 0.95); 
+            backdrop-filter: blur(5px);
+            padding: 15px; 
+            z-index: 100; 
+            border-bottom: 1px solid #444; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
         
+        .controls-wrapper { max-width: 500px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 10px; }
         .top-controls { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         
-        /* Bouton Roulette Russe */
-        #random-btn { background-color: #9b59b6; color: white; border: none; padding: 12px 15px; font-size: 16px; border-radius: 15px; cursor: pointer; flex: 1; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        #random-btn { background-color: #9b59b6; color: white; border: none; padding: 12px 10px; font-size: 15px; border-radius: 12px; cursor: pointer; flex: 1; font-weight: bold; }
         #random-btn:active { background-color: #8e44ad; transform: scale(0.95); }
         
-        /* Contrôle du Volume */
-        .volume-control { display: flex; align-items: center; gap: 5px; background-color: #333; padding: 10px 15px; border-radius: 15px; flex: 1; justify-content: center; }
+        .volume-control { display: flex; align-items: center; gap: 5px; background-color: #333; padding: 10px; border-radius: 12px; flex: 1; justify-content: center; }
         #volume-slider { width: 100%; cursor: pointer; accent-color: #ff5e3a; }
 
-        /* Barre de recherche et Filtre */
-        .filters { display: flex; flex-direction: column; gap: 10px; }
-        #search-bar, #category-filter { padding: 15px; font-size: 16px; border-radius: 15px; border: none; text-align: center; outline: none; background-color: #333; color: white; }
+        .filters { display: flex; gap: 10px; }
+        #search-bar { flex: 2; padding: 12px; font-size: 14px; border-radius: 12px; border: none; outline: none; background-color: #333; color: white; text-align: left; }
+        #category-filter { flex: 1; padding: 12px; font-size: 14px; border-radius: 12px; border: none; outline: none; background-color: #333; color: white; }
         
-        /* Grille principale */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        /* Grille intelligente et fluide */
+        .grid-container { max-width: 800px; margin: 20px auto 0 auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
         
-        /* Conteneur d'un son (Bouton play + Étoile) */
-        .sound-card { display: flex; gap: 5px; }
+        .sound-card { display: flex; gap: 5px; overflow: hidden; }
         
-        .play-btn { background-color: #ff5e3a; color: white; border: none; padding: 15px 5px; font-size: 15px; border-radius: 10px; cursor: pointer; flex-grow: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.3); word-wrap: break-word; }
+       .play-btn { 
+            background-color: #ff5e3a; color: white; border: none; padding: 12px 8px; border-radius: 10px; 
+            cursor: pointer; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            gap: 6px; 
+        }
         .play-btn:active { background-color: #e04e2a; transform: scale(0.95); }
+        .play-btn.fav-active { background-color: #f1c40f; color: #111; font-weight: bold; }
+        .play-btn.fav-active:active { background-color: #f39c12; }
         
-        .fav-btn { background-color: #444; color: #888; border: none; width: 45px; font-size: 22px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        /* Troncature des textes avec les fameux points de suspension */
+        .sound-title { 
+            width: 100%; 
+            font-size: 14px; 
+            font-weight: bold; 
+            white-space: normal; /* Autorise le texte à passer à la ligne */
+            word-wrap: break-word; /* Coupe les mots extra-longs si nécessaire */
+            line-height: 1.3; 
+        }
+        .sound-category { 
+            width: 100%; 
+            font-size: 11px; 
+            opacity: 0.8; 
+            font-weight: normal; 
+            white-space: normal; 
+        }
+        
+        .fav-btn { background-color: #444; color: #888; border: none; width: 45px; font-size: 20px; border-radius: 10px; cursor: pointer; flex-shrink: 0; }
         .fav-btn.active { color: #ffcc00; }
     </style>
 </head>
 <body>
 
-    <h1>🔊 La planche à sons</h1>
-    
     <div class="controls-container">
-        
-        <div class="top-controls">
-            <button id="random-btn">🎲 Aléatoire</button>
-            <div class="volume-control">
-                <span>🔉</span>
-                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1">
-                <span>🔊</span>
+        <h1>🔊 Ma Soundboard</h1>
+        <div class="controls-wrapper">
+            <div class="top-controls">
+                <button id="random-btn">🎲 Aléatoire</button>
+                <div class="volume-control">
+                    <span>🔉</span>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1">
+                    <span>🔊</span>
+                </div>
+            </div>
+
+            <div class="filters">
+                <input type="text" id="search-bar" placeholder="🔍 Chercher..." />
+                <select id="category-filter">
+                    <option value="all">Toutes</option>
+                    <option value="favorites">⭐ Favoris</option>
+                </select>
             </div>
         </div>
-        
-        <div class="filters">
-            <input type="text" id="search-bar" placeholder="🔍 Rechercher un son..." />
-            <select id="category-filter">
-                <option value="all">Toutes les catégories</option>
-                <option value="favorites">⭐ Mes Favoris</option>
-                </select>
-        </div>
-
     </div>
     
-    <div class="grid" id="soundboard-grid"></div>
+    <div class="grid-container">
+        <div class="grid" id="soundboard-grid"></div>
+    </div>
 
     <script src="sounds-config.js"></script>
     <script src="app.js"></script>

@@ -81,7 +81,7 @@ function renderButtons() {
 
         const playBtn = document.createElement('button');
         playBtn.className = 'play-btn';
-        playBtn.innerHTML = `${nomNettoye}<br><span style="font-size: 11px; opacity: 0.7;">${getEmoji(categorie)} ${categorie}</span>`;
+        playBtn.innerHTML = `<span class="sound-title">${nomNettoye}</span><span class="sound-category">${getEmoji(categorie)} ${categorie}</span>`;
         playBtn.addEventListener('click', () => playSound(chemin));
 
         const favBtn = document.createElement('button');
