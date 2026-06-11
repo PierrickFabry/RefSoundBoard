@@ -15,7 +15,7 @@ const categoryEmojis = {
     'Memes': '🤡',
     'Films': '🎬',
     'Bruitages': '💥',
-    'Tipeu' : '🧸​',
+    'Bonne nuit les tipeu' : '🧸​',
     'Musique': '🎵',
     'Kaamelott': '🏰​',
     'Kronk' : '💪​',
