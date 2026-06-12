@@ -110,7 +110,7 @@ function playSound(cheminDuFichier) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
     }
-    const cheminSecurise = encodeURI('sons/' + cheminDuFichier);
+    const cheminSecurise = encodeURI('Sons/' + cheminDuFichier);
     currentAudio = new Audio(cheminSecurise);
     currentAudio.volume = currentVolume; 
     currentAudio.play();
