@@ -3,26 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma Soundboard</title>
+    <title>La planche à sons</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icones/icone-512.png">
+    <link rel="icon" type="image/png" href="Icones/icone-512.png">
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; margin: 0; padding-bottom: 20px;}
         
         h1 { margin: 15px 0 5px 0; font-size: 24px; }
 
-        /* Menu collant avec effet de verre (blur) */
         .controls-container { 
-            position: sticky; 
-            top: 0; 
-            background-color: rgba(34, 34, 34, 0.95); 
-            backdrop-filter: blur(5px);
-            padding: 15px; 
-            z-index: 100; 
-            border-bottom: 1px solid #444; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
+            position: sticky; top: 0; background-color: rgba(34, 34, 34, 0.95); 
+            backdrop-filter: blur(5px); padding: 15px; z-index: 100; 
+            border-bottom: 1px solid #444; display: flex; flex-direction: column; gap: 10px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         
@@ -39,46 +31,46 @@
         #search-bar { flex: 2; padding: 12px; font-size: 14px; border-radius: 12px; border: none; outline: none; background-color: #333; color: white; text-align: left; }
         #category-filter { flex: 1; padding: 12px; font-size: 14px; border-radius: 12px; border: none; outline: none; background-color: #333; color: white; }
         
-        /* Grille intelligente et fluide */
         .grid-container { max-width: 800px; margin: 20px auto 0 auto; padding: 0 15px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
         
-        .sound-card { display: flex; gap: 5px; overflow: hidden; }
+        .sound-card { display: flex; gap: 5px; min-width: 0; }
         
-       .play-btn { 
+        .play-btn { 
             background-color: #ff5e3a; color: white; border: none; padding: 12px 8px; border-radius: 10px; 
-            cursor: pointer; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            gap: 6px; 
+            cursor: pointer; flex-grow: 1; min-width: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; 
         }
         .play-btn:active { background-color: #e04e2a; transform: scale(0.95); }
         .play-btn.fav-active { background-color: #f1c40f; color: #111; font-weight: bold; }
         .play-btn.fav-active:active { background-color: #f39c12; }
         
-        /* Troncature des textes avec les fameux points de suspension */
         .sound-title { 
-            width: 100%; 
-            font-size: 14px; 
-            font-weight: bold; 
-            white-space: normal; /* Autorise le texte à passer à la ligne */
-            word-wrap: break-word; /* Coupe les mots extra-longs si nécessaire */
-            line-height: 1.3; 
-        }
-        .sound-category { 
-            width: 100%; 
-            font-size: 11px; 
-            opacity: 0.8; 
-            font-weight: normal; 
-            white-space: normal; 
+            width: 100%; font-size: 14px; font-weight: bold; white-space: normal; 
+            overflow-wrap: break-word; word-break: break-word; line-height: 1.3; 
         }
         
-        .fav-btn { background-color: #444; color: #888; border: none; width: 45px; font-size: 20px; border-radius: 10px; cursor: pointer; flex-shrink: 0; }
+        .sound-category { width: 100%; font-size: 11px; opacity: 0.8; font-weight: normal; white-space: normal; }
+        
+        /* Nouvelle Colonne d'Actions (Favoris + Partage) */
+        .actions-col { display: flex; flex-direction: column; gap: 5px; width: 45px; flex-shrink: 0; }
+        
+        .fav-btn, .share-btn { 
+            border: none; font-size: 18px; border-radius: 10px; cursor: pointer; flex: 1; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        
+        .fav-btn { background-color: #444; color: #888; }
         .fav-btn.active { color: #ffcc00; }
+        
+        .share-btn { background-color: #3498db; color: white; }
+        .share-btn:active { background-color: #2980b9; }
     </style>
 </head>
 <body>
 
     <div class="controls-container">
-        <h1>🔊 Ma Soundboard</h1>
+        <h1>🔊 La planche à sons</h1>
         <div class="controls-wrapper">
             <div class="top-controls">
                 <button id="random-btn">🎲 Aléatoire</button>
